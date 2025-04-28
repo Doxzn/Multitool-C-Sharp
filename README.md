@@ -29,7 +29,7 @@ LEGAL DISCLAIMER
 
 By downloading, installing, or using this software, you acknowledge and agree to the following terms and conditions:
 
-No Liability: The creator, developer, and distributor of this software (hereinafter referred to as the Author) shall not be held liable for any damage, loss, harm, disruption, or legal consequences caused — directly or indirectly — by the use or misuse of this software. This includes, but is not limited to, damage to hardware, software, networks, data, or any other property, as well as any legal penalties resulting from the use of this software.
+No Liability: The creator, developer, and distributor of this software shall not be held liable for any damage, loss, harm, disruption, or legal consequences caused — directly or indirectly — by the use or misuse of this software. This includes, but is not limited to, damage to hardware, software, networks, data, or any other property, as well as any legal penalties resulting from the use of this software.
 
 Authorized Use Only: This software is intended strictly for educational, ethical testing, and research purposes. By downloading and using this software, you confirm that you have received explicit, written consent from the owner or administrator of any systems or networks on which it will be used. Unauthorized use of this software to access or interfere with systems, data, or networks is illegal and may violate local, state, federal, or international laws.
 
