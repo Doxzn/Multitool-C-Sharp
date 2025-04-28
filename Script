@@ -1,0 +1,375 @@
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace MultiTool
+{
+    internal class Program
+    {
+        static bool isDarkMode = false;
+
+        static async Task Main(string[] args)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Banner();
+                Menu();
+
+                Console.Write("\nChoose an option: ");
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                    continue;
+
+                char option = input[0];
+
+                switch (option)
+                {
+                    case '0':
+                        ToggleMode();
+                        break;
+                    case '1':
+                        await TrollOpenCmdTabs();
+                        break;
+                    case '2':
+                        await WifiPasswords();
+                        break;
+                    case '3':
+                        await UserInfo();
+                        break;
+                    case '4':
+                        await TestWifi();
+                        break;
+                    case '5':
+                        await KillProcess();
+                        break;
+                    case '6':
+                        await GeoLocator();
+                        break;
+                    case '7':
+                        await DriverAndWindowsUpdates();
+                        break;
+                    case '8':
+                        await DisplaySystemInfo();
+                        break;
+                    case '9':
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        await Task.Delay(1500);
+                        break;
+                }
+            }
+        }
+
+        static void Banner()
+        {
+            string bannerText = @"
+███╗   ███╗██╗   ██╗██╗  ████████╗██╗    ████████╗ ██████╗  ██████╗ ██╗    
+████╗ ████║██║   ██║██║  ╚══██╔══╝██║    ╚══██╔══╝██╔═══██╗██╔═══██╗██║    
+██╔████╔██║██║   ██║██║     ██║   ██║       ██║   ██║   ██║██║   ██║██║    
+██║╚██╔╝██║██║   ██║██║     ██║   ██║       ██║   ██║   ██║██║   ██║██║    
+██║ ╚═╝ ██║╚██████╔╝███████╗██║   ██║       ██║   ╚██████╔╝╚██████╔╝███████╗
+╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝   ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
+
+                                       MULTITOOL - Made By Evan";
+            Console.WriteLine(bannerText);
+        }
+
+        static void Menu()
+        {
+            Console.WriteLine("\n0. Toggle Light/Dark Mode");
+            Console.WriteLine("1. Open 1000 CMD tabs");
+            Console.WriteLine("2. Show saved Wi-Fi passwords");
+            Console.WriteLine("3. Display user information");
+            Console.WriteLine("4. Test Wi-Fi connection");
+            Console.WriteLine("5. Kill a process");
+            Console.WriteLine("6. Geo-location lookup");
+            Console.WriteLine("7. Check for driver and Windows updates");
+            Console.WriteLine("8. Display system info");
+            Console.WriteLine("9. Exit");
+        }
+
+        static void ToggleMode()
+        {
+            isDarkMode = !isDarkMode;
+            ApplyMode();
+        }
+
+        static void ApplyMode()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = isDarkMode ? ConsoleColor.DarkBlue : ConsoleColor.White;
+            Console.Clear();
+        }
+
+        static async Task TrollOpenCmdTabs()
+        {
+            Console.Clear();
+            Console.WriteLine("Opening 1000 CMD tabs...");
+
+            for (int i = 0; i < 1000; i++)
+            {
+                try { Process.Start("cmd.exe"); }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Error: {ex.Message}");
+                    Console.ResetColor();
+                }
+
+                if (i % 10 == 0)
+                    Console.WriteLine($"Opened {i + 1} CMD tabs...");
+                await Task.Delay(1);
+            }
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        static async Task WifiPasswords()
+        {
+            Console.Clear();
+            Console.WriteLine("Fetching saved Wi-Fi passwords...");
+
+            string command = "netsh wlan show profiles";
+            var processInfo = new ProcessStartInfo("cmd.exe", "/C " + command)
+            {
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            var process = Process.Start(processInfo);
+            string output = await process.StandardOutput.ReadToEndAsync();
+            Console.WriteLine(output);
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        static async Task UserInfo()
+        {
+            Console.Clear();
+            Console.WriteLine("Fetching user information...");
+
+            Console.WriteLine($"User Name: {Environment.UserName}");
+            Console.WriteLine($"Machine Name: {Environment.MachineName}");
+            Console.WriteLine($"OS Version: {Environment.OSVersion}");
+            Console.WriteLine($"System Directory: {Environment.SystemDirectory}");
+            Console.WriteLine($"Processor Count: {Environment.ProcessorCount}");
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        static async Task TestWifi()
+        {
+            Console.Clear();
+            Console.WriteLine("Testing Wi-Fi connection...");
+
+            string command = "ping google.com";
+            var processInfo = new ProcessStartInfo("cmd.exe", "/C " + command)
+            {
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            var process = Process.Start(processInfo);
+            string output = await process.StandardOutput.ReadToEndAsync();
+            Console.WriteLine(output);
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        static async Task KillProcess()
+        {
+            Console.Clear();
+            Console.Write("Enter the name of the process to kill (e.g., spotify.exe): ");
+            string processName = Console.ReadLine();
+
+            try
+            {
+                foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(processName)))
+                {
+                    process.Kill();
+                    Console.WriteLine($"Successfully killed process: {processName}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        static async Task GeoLocator()
+        {
+            Console.Clear();
+            Console.WriteLine("Fetching your IP and location...\n");
+
+            string myIp = await GetPublicIP();
+            Console.WriteLine($"Your public IP address: {myIp}");
+
+            Console.Write("\nEnter an IP address to look up: ");
+            string ipToLookup = Console.ReadLine();
+
+            string geoInfo = await GetGeoLocation(ipToLookup);
+            Console.WriteLine($"\nGeo-location information for {ipToLookup}:\n{geoInfo}");
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        static async Task<string> GetPublicIP()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                return await client.GetStringAsync("https://api.ipify.org");
+            }
+        }
+
+        static async Task<string> GetGeoLocation(string ip)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                return await client.GetStringAsync($"https://ipinfo.io/{ip}/json");
+            }
+        }
+
+        // ✅ Simplified Option 7
+        static async Task DriverAndWindowsUpdates()
+        {
+            Console.Clear();
+            Console.WriteLine("=== System Update Checker ===\n");
+
+            Console.WriteLine("[1/2] Checking for Windows updates...");
+            try
+            {
+                var windowsUpdate = new ProcessStartInfo("powershell", "-Command \"Install-Module PSWindowsUpdate -Force; Get-WindowsUpdate\"")
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                var process = Process.Start(windowsUpdate);
+                string result = await process.StandardOutput.ReadToEndAsync();
+                Console.WriteLine("Windows Update Results:\n");
+                Console.WriteLine(result);
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Error checking Windows updates: {ex.Message}");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("\n[2/2] Checking for driver updates...");
+            await Task.Delay(1500); // Simulated scan
+            Console.WriteLine("Driver check complete. (Note: Real driver scanning not implemented.)");
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        static async Task DisplaySystemInfo()
+        {
+            Console.Clear();
+            Console.WriteLine("Fetching system information...\n");
+
+            // Get CPU information
+            string cpuInfo = GetCpuInfo();
+
+            // Get GPU information
+            string gpuInfo = GetGpuInfo();
+
+            // Get RAM information
+            string ramInfo = GetRamInfo();
+
+            // Get OS info
+            string osInfo = GetOsInfo();
+
+            Console.WriteLine($"CPU: {cpuInfo}");
+            Console.WriteLine($"GPU: {gpuInfo}");
+            Console.WriteLine($"RAM: {ramInfo}");
+            Console.WriteLine($"OS: {osInfo}");
+
+            Console.WriteLine("\nPress any key to return.");
+            Console.ReadKey();
+        }
+
+        // Method to fetch CPU information
+        static string GetCpuInfo()
+        {
+            try
+            {
+                var cpuInfo = new ProcessStartInfo("wmic", "cpu get caption")
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                var process = Process.Start(cpuInfo);
+                return process.StandardOutput.ReadToEnd().Trim();
+            }
+            catch
+            {
+                return "CPU info not available";
+            }
+        }
+
+        // Method to fetch GPU information
+        static string GetGpuInfo()
+        {
+            try
+            {
+                var gpuInfo = new ProcessStartInfo("wmic", "path win32_videocontroller get caption")
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                var process = Process.Start(gpuInfo);
+                return process.StandardOutput.ReadToEnd().Trim();
+            }
+            catch
+            {
+                return "GPU info not available";
+            }
+        }
+
+        // Method to fetch RAM information
+        static string GetRamInfo()
+        {
+            try
+            {
+                var ramInfo = new ProcessStartInfo("wmic", "memorychip get capacity")
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                var process = Process.Start(ramInfo);
+                string result = process.StandardOutput.ReadToEnd().Trim();
+                return $"{(long.Parse(result) / 1024 / 1024 / 1024)} GB";
+            }
+            catch
+            {
+                return "RAM info not available";
+            }
+        }
+
+        // Method to fetch OS information
+        static string GetOsInfo()
+        {
+            return Environment.OSVersion.ToString();
+        }
+    }
+}
